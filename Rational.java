@@ -1,7 +1,7 @@
-// Team Unown -- James Wang, Owen Zeng
+// Team Unown -- Andrew Lin, Owen Zeng
 // APCS1 pd9
-// HW32 -- Irrationality Stops Here
-// 2015-11-17
+// HW33 -- Do you even add, bro?
+// 2015-11-18
 
 public class Rational {
     public int numerator;
@@ -27,9 +27,8 @@ public class Rational {
         return numerator + "/" + denominator;
     }
     
-    public float floatValue(int numerator, int denominator){
-        float answer = numerator / denominator;
-        return answer;
+    public float floatValue(){
+        return this.numerator / this.denominator;
     }
 
     
@@ -42,8 +41,66 @@ public class Rational {
         this.numerator *= other.denominator;
         this.denominator *= other.numerator;
     }
+    
+    public static void main(String[] args) {
+        Rational r = new Rational(1, 1);
+        Rational s = new Rational(7, 20);
+        s.compareTo(r);
+        System.out.println(s);
+    }
 
-    //======================PHASE2==================================//
+ /*=====================PHASE 2=====================*/
+    
+    public void add(Rational other){
+        int thisOriginal = this.denominator;
+        if (this.denominator != other.denominator){
+            this.numerator *= other.denominator;
+            this.denominator *= other.denominator;
+            other.numerator *= thisOriginal;
+        }
+        this.numerator += other.numerator;
+    }
+    
+    public void subtract(Rational other){
+        int thisOriginal = this.denominator;
+        if (this.denominator != other.denominator){
+            this.numerator *= other.denominator;
+            this.denominator *= other.denominator;
+           }
+        this.numerator -= other.numerator * thisOriginal;
+    }
+    
+    public int gcdEW(){
+        int gcd = 0;
+        int a = this.numerator;
+        int b = this.denominator;
+	    if (a == 0){
+	        return b;
+	    }
+        while (a != 0 || b != 0){
+            if (a > b) {
+                if (a % b == 0){
+		    gcd = b;
+		}
+                a = a % b;
+            }
+            else {
+                if ( b % a == 0){
+		    gcd = a;
+		}
+                b = b % a;
+            }
+        }
+        return gcd;
+    }
+    
+    public void reduce(){
+        int gcd = gcdER(this.numerator, this.denominator);
+        this.numerator /= gcd;
+        this.denominator /= gcd;
+    }
+    
+    /*=====================PHASE 3=====================*/
     public static int gcdER (int a, int b){
         if ((a == b) || (b == 0)){
             return a;} //returns the GCD.
@@ -53,38 +110,9 @@ public class Rational {
             return gcdER (b , (a-b));
         }
     }
-    //Adds fractions brute-force way
-    public void add (Rational other) {
-	this.numerator = (this.numerator)*(other.denominator) + (other.numerator)*(this.denominator);
-	this.denominator = (this.denominator*other.denominator); }
-
-    //subtracts fractions brute-force way
-    public void subtract (Rational other) {
-	this.numerator = (this.numerator*other.denominator) - (other.numerator*this.denominator);
-	this.denominator = (this.denominator*other.denominator); }
-
-    //reduces fraction
-    public void reduce () {
-	int gcd = gcdER (this.numerator, this.denominator);
-	this.numerator /= gcd;
-	this.denominator /= gcd; }
-
-    //========================PHASE3================================//
-
-    public static void main(String[] args) {
-        Rational r = new Rational(2, 3);
-        Rational s = new Rational(1, 2);
-        r.divide(s);
-        System.out.println(r);
-	r.multiply(s);
-        System.out.println(r);
-	//Phase 2 Test
-	r.add(s);
-	System.out.println(r);
-	r.subtract(s);
-	System.out.println(r);
-	r.reduce();
-	System.out.println(r);
-	//Phase3 Test
+    
+    public float compareTo (Rational other){
+        other.subtract(this);//figuring out which one is larger by taking difference of the two
+        return this.numerator / this.denominator;//returning "Rational this" which fits the function's requirements 
     }
 }
